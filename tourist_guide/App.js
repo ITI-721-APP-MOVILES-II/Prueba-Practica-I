@@ -1,13 +1,26 @@
-import React from 'react';
-		import {View} from 'react-native';
-		import Index from './src/views';
+import React, { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
+import { store } from "./src/store";
+import { loadFavoritesFromStorage } from "./src/store/slices/favoritesSlice";
+import AppNavigator from "./src/navigation/AppNavigator";
 
-		const App = () => {
-		  return(
-			  <View>
-				<Index />
-			  </View>
-		  );
-		};
+// Componente interno que carga los favoritos
+function AppContent() {
+  const dispatch = useDispatch();
 
-		export default App;
+  useEffect(() => {
+    console.log("🚀 App started - Loading favorites from storage...");
+    dispatch(loadFavoritesFromStorage());
+  }, [dispatch]);
+
+  return <AppNavigator />;
+}
+
+// Componente principal con Provider
+export default function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
+  );
+}
